@@ -24,6 +24,45 @@ class Interpreter implements Expr.Visitor<Object>,
       @Override
       public String toString() { return "<fonction native>"; }
     });
+globals.define("pi", new TjunkieCallable() {
+      @Override
+      public int arity() { return 0; }
+
+      @Override
+      public Object call(Interpreter interpreter,
+                         List<Object> arguments) {
+        return (double)3.14159265359;
+      }
+
+      @Override
+      public String toString() { return "<fonction native>"; }
+    });
+globals.define("iel", new TjunkieCallable() {
+      @Override
+      public int arity() { return 0; }
+
+      @Override
+      public Object call(Interpreter interpreter,
+                         List<Object> arguments) {
+        return (String)"Pronom personnel sujet de la troisième personne du singulier et du pluriel, \n employé pour évoquer une personne quel que soit son genre.";
+      }
+
+      @Override
+      public String toString() { return "<native fn>"; }
+    });    
+globals.define("inclue", new TjunkieCallable() {
+      @Override
+      public int arity() { return 1; }
+
+      @Override
+      public Object call(Interpreter interpreter,
+                         List<Object> arguments) {
+         
+         return (String) arguments.get(0) + ".e";
+        }
+      @Override
+      public String toString() { return "<native fn>"; }
+    });    
   }
   
   void interpret(List<Stmt> statements) {
@@ -112,13 +151,13 @@ class Interpreter implements Expr.Visitor<Object>,
   }
   private void checkNumberOperand(Token operator, Object operand) {
     if (operand instanceof Double) return;
-    throw new RuntimeError(operator, "Opérandes DOIVENT(?) être des nombres.");
+    throw new RuntimeError(operator, "Opérandes doivent être des nombres.");
   }
   private void checkNumberOperands(Token operator,
                                    Object left, Object right) {
     if (left instanceof Double && right instanceof Double) return;
     
-    throw new RuntimeError(operator, "Opérandes DOIVENT(?) être des nombres.");
+    throw new RuntimeError(operator, "Opérandes doivent être des nombres.");
   }
 
   private boolean isTruthy(Object object) {
@@ -286,7 +325,7 @@ class Interpreter implements Expr.Visitor<Object>,
           return (String)left + (String)right;
         }
         throw new RuntimeError(expr.operator,
-            "Opérandes d o i v e n t être deux numéros ou deux morceaux.");
+            "Opérandes doivent être deux numéros ou deux morceaux.");
       case SLASH:
         checkNumberOperands(expr.operator, left, right);          
         return (double)left / (double)right;
